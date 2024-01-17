@@ -14,9 +14,9 @@ TAB = "  " * 4
 
 class Queens:
     #----------------------------------
-    def __init__(self, n, debug):
+    def __init__(self, n, verbose):
         self.n = n
-        self.debug = debug
+        self.verbose = verbose
 
         a = {} # a[j] = True, <=> Zeile j ist frei
         b = {} # b[k] = True, <=> k-te / Diagonale ist frei
@@ -35,16 +35,11 @@ class Queens:
         x = self.x
 
         indent = TAB * (level - 1)
-        if self.debug:
-            #print(indent + ' '.join([str(x[i]) for i in sorted(x.keys())]))
-            print(indent, end=' ')
-            for i in range(1, n+1):
-                print(x.get(i, ' '), end=' ')
-            print()
         for i in range(1,n+1):
             queen_pos = x.get(i)
             row =''.join([" X" if p == queen_pos else " ." for p in range(1,n+1)])
-            print(indent + row)
+            nr = queen_pos if queen_pos and self.verbose else ''
+            print(f'{indent}{row}{nr:>3}')
         print()
 
     #----------------------------------
@@ -71,12 +66,11 @@ class Queens:
 #----------------------------------
 def main():
     args = sys.argv[1:]
-    filename = __file__
-    print(f"Aufruf {filename}")
-    assert len(args) in (1,2), f"Aufruf: {filename} n (Anzahl Damen). Bei mehr als einem Argument Debugausgabe"
+    filename = __file__.replace('\\','/').split('/')[-1]
+    assert len(args) in (1,2), f"Aufruf: {filename} n (Anzahl Damen). Bei mehr als einem Argument ausführliche Ausgabe"
     n =int(args[0])
-    debug = len(args) > 1
-    queens = Queens(n=n, debug=debug)
+    verbose = len(args) > 1
+    queens = Queens(n=n, verbose=verbose)
     q = queens.try_(1)
     print ("Gefunden" if q else "Nicht gefunden")
 
